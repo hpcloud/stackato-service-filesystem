@@ -1,0 +1,14 @@
+---
+service:
+  name: filesystem
+  version: "1.0"
+  description: 'Persistent filesystem service'
+  plans: ['free']
+  tags: ['filesystem', 'filesystem-1.0', 'Persistent filesystem service']
+ip_route: 172.16.218.128
+index: 0
+token: "0xdeadbeef"
+logging:
+  level: debug
+mbus: nats://localhost:4222
+pid: /var/vcap/sys/run/filesystem_service.pid
