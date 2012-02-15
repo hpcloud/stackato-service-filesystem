@@ -12,7 +12,8 @@ class VCAP::Services::Filesystem::Provisioner < VCAP::Services::Base::Provisione
   include VCAP::Services::Filesystem::Common
   include VCAP::Services::Filesystem
 
-  FILESYSTEM_CONFIG_FILE = File.expand_path("../../../config/filesystem_gateway.yml", __FILE__)
+  config_base_dir = ENV["CLOUD_FOUNDRY_CONFIG_PATH"] || File.join(File.dirname(__FILE__), '..', 'config')
+  FILESYSTEM_CONFIG_FILE = File.join(config_base_dir, 'filesystem_gateway.yml')
 
   def initialize(options)
     super(options)
@@ -91,9 +92,10 @@ class VCAP::Services::Filesystem::Provisioner < VCAP::Services::Base::Provisione
     prov_req.credentials = prov_handle["credentials"] if prov_handle
 
     credentials = {
-      "internal" => {
-        "private_key" => instance["private_key"],
-      }
+      "private_key" => instance["private_key"],
+      "user"        => instance["user"],
+      "dir"         => instance["dir"],
+      "host"	    => fs_config[:host],
     }
 
     svc = {
