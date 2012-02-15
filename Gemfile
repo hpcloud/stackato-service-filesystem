@@ -10,9 +10,8 @@ gem "do_sqlite3"
 gem "sinatra"
 gem "thin"
 
-gem 'vcap_common', '>= 1.0.4', :require => ['vcap/common', 'vcap/component']
-gem 'vcap_logging', '>=0.1.3', :require => ['vcap/logging']
-gem 'vcap_services_base'
+gem 'vcap_common', :require => ['vcap/common', 'vcap/component'], :path => '../../common'
+gem 'vcap_logging', :require => ['vcap/logging']
 
 group :test do
   gem "rake"

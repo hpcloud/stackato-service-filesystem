@@ -1,6 +1,7 @@
 # Copyright (c) 2009-2011 VMware, Inc.
 $:.unshift File.join(File.dirname(__FILE__), ".")
 
+require "base/provisioner"
 require "filesystem_service/common"
 require "filesystem_service/error"
 require "uuidtools"
@@ -82,7 +83,7 @@ class VCAP::Services::Filesystem::Provisioner < VCAP::Services::Base::Provisione
     #   "dir"         => '/var/vcap/services/filesystem/storage/filesystem-u3h5...',
     #   "private_key" => '-----BEGIN RSA PRIVATE KEY...',
     # }
-    raise FilesystemError.new(FilesystemError::FILESYSTEM_GET_BACKEND_FAILED) if instance == nil
+    raise FilesystemError.new(FilesystemError::FILESYSTEM_CREATE_INSTANCE_DIR_FAILED, name) if instance == nil
 
     prov_req = ProvisionRequest.new
     prov_req.plan = request.plan
