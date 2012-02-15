@@ -5,7 +5,7 @@ service:
   description: 'Persistent filesystem service'
   plans: ['free']
   tags: ['filesystem', 'filesystem-1.0', 'Persistent filesystem service']
-ip_route: 172.16.218.128
+ip_route: 127.0.0.1
 index: 0
 token: "0xdeadbeef"
 logging:

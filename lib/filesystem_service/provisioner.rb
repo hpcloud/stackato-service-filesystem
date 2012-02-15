@@ -4,6 +4,7 @@ $:.unshift File.join(File.dirname(__FILE__), ".")
 require "filesystem_service/common"
 require "filesystem_service/error"
 require "uuidtools"
+require "vcap/sysadm"
 
 class VCAP::Services::Filesystem::Provisioner < VCAP::Services::Base::Provisioner
 
@@ -14,33 +15,6 @@ class VCAP::Services::Filesystem::Provisioner < VCAP::Services::Base::Provisione
 
   def initialize(options)
     super(options)
-    @is_first_update_handles = true
-  end
-
-  def update_handles(handles)
-    super(handles)
-    # Process the handles that not on the backend
-    if @is_first_update_handles
-      @prov_svcs.each do |_, svc|
-        # Filesystem service only need process provision handles
-        if svc[:credentials]["internal"]["name"] == svc[:service_id]
-          backend = get_backend(svc[:credentials]["internal"]["host"], svc[:credentials]["internal"]["export"])
-          if backend
-            next if File.exists?(get_instance_dir(svc[:service_id], backend))
-          end
-          request = ProvisionRequest.new
-          request.plan = svc[:configuration]["plan"]
-          provision_service(request, svc) do |msg|
-            if msg["success"]
-              @logger.info("Succeed to provision an instance #{svc.inspect} that not on the backend")
-            else
-              @logger.warn("Failed to provision an instance #{svc.inspect} that not on the backend: #{msg["response"]}")
-            end
-          end
-        end
-      end
-    end
-    @is_first_update_handles = false
   end
 
   # Only check instances orphans, there is no binding orphan of filesystem service
@@ -50,9 +24,10 @@ class VCAP::Services::Filesystem::Provisioner < VCAP::Services::Base::Provisione
     @handles_for_check_orphan = handles.deep_dup
     instances_list = []
     @backends.each do |backend|
-      Dir.foreach(backend["mount"]) do |child|
+      Dir.foreach("/var/vcap/services/filesystem/storage") do |child|
         unless child == "." || child ==".."
-          instances_list << child if File.directory?(File.join(backend["mount"], child))
+          child.gsub! "filesystem-", ""
+          instances_list << child if File.directory?(File.join("/var/vcap/services/filesystem/storage", child))
         end
       end
     end
@@ -94,36 +69,38 @@ class VCAP::Services::Filesystem::Provisioner < VCAP::Services::Base::Provisione
 
   def provision_service(request, prov_handle=nil, &blk)
     @logger.debug("[#{service_description}] Attempting to provision instance (request=#{request.extract})")
-    if prov_handle
-      name = prov_handle[:service_id]
-      backend = get_backend(prov_handle[:credentials]["internal"]["host"], prov_handle[:credentials]["internal"]["export"])
-    else
+#    if prov_handle
+#      name = prov_handle[:service_id]
+#      backend = get_backend(prov_handle[:credentials]["internal"]["host"], prov_handle[:credentials]["internal"]["export"])
+#    else
       name = UUIDTools::UUID.random_create.to_s
-      backend = get_backend
-    end
-    raise FilesystemError.new(FilesystemError::FILESYSTEM_GET_BACKEND_FAILED) if backend == nil
-    instance_dir = get_instance_dir(name, backend)
-    begin
-      FileUtils.mkdir(instance_dir)
-    rescue => e
-      raise FilesystemError.new(FilesystemError::FILESYSTEM_CREATE_INSTANCE_DIR_FAILED, instance_dir)
-    end
-    begin
-      FileUtils.chmod(0777, instance_dir)
-    rescue => e
-      raise FilesystemError.new(FilesystemError::FILESYSTEM_CHANGE_INSTANCE_DIR_PERMISSION_FAILED, instance_dir)
-    end
+#    end
+
+    instance = SA::create_filesystem_instance
+    # instance = {
+    #   "instance_id" => 'u3h5ui245i24g5oi24g5',
+    #   "dir"         => '/var/vcap/services/filesystem/storage/filesystem-u3h5...',
+    #   "private_key" => '-----BEGIN RSA PRIVATE KEY...',
+    # }
+    raise FilesystemError.new(FilesystemError::FILESYSTEM_GET_BACKEND_FAILED) if instance == nil
+
     prov_req = ProvisionRequest.new
     prov_req.plan = request.plan
     # use old credentials to provision a service if provided.
     prov_req.credentials = prov_handle["credentials"] if prov_handle
 
-    credentials = gen_credentials(name, backend)
+    credentials = {
+      "internal" => {
+        "private_key" => instance["private_key"],
+      }
+    }
+
     svc = {
       :data => prov_req.dup,
-      :service_id => name,
+      :service_id => instance["instance_id"],
       :credentials => credentials
     }
+
     # FIXME: workaround for inconsistant representation of bind handle and provision handle
     svc_local = {
       :configuration => prov_req.dup,
@@ -146,11 +123,8 @@ class VCAP::Services::Filesystem::Provisioner < VCAP::Services::Base::Provisione
     @logger.debug("[#{service_description}] Attempting to unprovision instance (instance id=#{instance_id}")
     svc = @prov_svcs[instance_id]
     raise FilesystemError.new(FilesystemError::FILESYSTEM_FIND_INSTANCE_FAILED, instance_id) if svc == nil
-    host = svc[:credentials]["internal"]["host"]
-    export = svc[:credentials]["internal"]["export"]
-    backend = get_backend(host, export)
-    raise FilesystemError.new(FilesystemError::FILESYSTEM_GET_BACKEND_BY_HOST_AND_EXPORT_FAILED, host, export) if backend == nil
-    FileUtils.rm_rf(get_instance_dir(instance_id, backend))
+
+    SA::cleanup_filesystem_instance(instance_id)
     bindings = find_all_bindings(instance_id)
     bindings.each do |b|
       @prov_svcs.delete(b[:service_id])
@@ -208,41 +182,9 @@ class VCAP::Services::Filesystem::Provisioner < VCAP::Services::Base::Provisione
     blk.call(success())
   end
 
-  def get_filesystem_config
+  def fs_config
     config_file = YAML.load_file(FILESYSTEM_CONFIG_FILE)
     config = VCAP.symbolize_keys(config_file)
-    config[:backends]
+    config
   end
-
-  def get_backend(host=nil, export=nil)
-    if host && export
-      @backends.each do |backend|
-        if backend["host"] == host && backend["export"] == export
-          return backend
-        end
-      end
-      return nil
-    else
-      # Simple round-robin load-balancing; TODO: Something smarter?
-      return nil if @backends == nil || @backends.empty?
-      index = @backend_index
-      @backend_index = (@backend_index + 1) % @backends.size
-      return @backends[index]
-    end
-  end
-
-  def get_instance_dir(name, backend)
-    File.join(backend["mount"], name)
-  end
-
-  def gen_credentials(name, backend)
-    credentials = {
-      "internal" => {
-        "name" => name,
-        "host" => backend["host"],
-        "export" => backend["export"],
-      }
-    }
-  end
-
 end
