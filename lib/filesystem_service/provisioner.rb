@@ -110,7 +110,7 @@ class VCAP::Services::Filesystem::Provisioner < VCAP::Services::Base::Provisione
       :service_id => name,
       :credentials => credentials
     }
-    @logger.debug("Provisioned #{svc.inspect}")
+    @logger.debug("Successfully provisioned service for request #{svc.inspect}")
     @prov_svcs[svc[:service_id]] = svc_local
     blk.call(success(svc))
   rescue => e
