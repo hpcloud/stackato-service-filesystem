@@ -7,6 +7,7 @@ module VCAP
         # 31900 - 31999  Filesystem-specific Error
         FILESYSTEM_CREATE_INSTANCE_DIR_FAILED             = [31900, HTTP_INTERNAL, "Could not create instance directory: %s"]
         FILESYSTEM_FIND_INSTANCE_FAILED                   = [31904, HTTP_NOT_FOUND, "Could not find instance: %s"]
+        FILESYSTEM_INSUFFICIENT_SPACE                     = [31901, HTTP_INTERNAL, "Insufficient space for instance"]
       end
     end
   end

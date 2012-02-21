@@ -25,12 +25,10 @@ class VCAP::Services::Filesystem::Provisioner < VCAP::Services::Base::Provisione
     reset_orphan_stat
     @handles_for_check_orphan = handles.deep_dup
     instances_list = []
-    @backends.each do |backend|
-      Dir.foreach("/var/vcap/services/filesystem/storage") do |child|
-        unless child == "." || child ==".."
-          child.gsub! "filesystem-", ""
-          instances_list << child if File.directory?(File.join("/var/vcap/services/filesystem/storage", child))
-        end
+    Dir.foreach("/var/vcap/services/filesystem/storage") do |child|
+      unless child == "." || child ==".."
+        child.gsub! "filesystem-", ""
+        instances_list << child if File.directory?(File.join("/var/vcap/services/filesystem/storage", child))
       end
     end
     nid = "gateway"
@@ -71,14 +69,19 @@ class VCAP::Services::Filesystem::Provisioner < VCAP::Services::Base::Provisione
 
   def provision_service(request, prov_handle=nil, &blk)
     @logger.debug("[#{service_description}] Attempting to provision instance (request=#{request.extract})")
-#    if prov_handle
-#      name = prov_handle[:service_id]
-#      backend = get_backend(prov_handle[:credentials]["internal"]["host"], prov_handle[:credentials]["internal"]["export"])
-#    else
-      name = UUIDTools::UUID.random_create.to_s
-#    end
+    name = UUIDTools::UUID.random_create.to_s
 
-    instance = SA::create_filesystem_instance
+    per_fs   = fs_config["max_fs_size"] # in MB
+    total_fs = fs_config["available_storage"]
+
+    if (total_fs - @prov_svcs.length * per_fs) < per_fs
+      @logger.warn("Insufficient space, requesting #{per_fs}MB, have #{@prov_svcs} provisioned services")
+      raise FilesystemError.new(FilesystemError::FILESYSTEM_INSUFFICIENT_SPACE)
+    end
+
+    limit = per_fs
+
+    instance = SA::create_filesystem_instance(limit)
     # instance = {
     #   "instance_id" => 'u3h5ui245i24g5oi24g5',
     #   "dir"         => '/var/vcap/services/filesystem/storage/filesystem-u3h5...',
