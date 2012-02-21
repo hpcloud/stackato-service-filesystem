@@ -71,8 +71,8 @@ class VCAP::Services::Filesystem::Provisioner < VCAP::Services::Base::Provisione
     @logger.debug("[#{service_description}] Attempting to provision instance (request=#{request.extract})")
     name = UUIDTools::UUID.random_create.to_s
 
-    per_fs   = fs_config["max_fs_size"] # in MB
-    total_fs = fs_config["available_storage"]
+    per_fs   = fs_config[:max_fs_size] # in MB
+    total_fs = fs_config[:available_storage]
 
     if (total_fs - @prov_svcs.length * per_fs) < per_fs
       @logger.warn("Insufficient space, requesting #{per_fs}MB, have #{@prov_svcs} provisioned services")
