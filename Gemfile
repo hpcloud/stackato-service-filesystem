@@ -10,6 +10,8 @@ gem "do_sqlite3"
 gem "sinatra"
 gem "thin"
 
+gem "net-ssh"
+
 gem 'vcap_common', :require => ['vcap/common', 'vcap/component'], :path => '../../common'
 gem 'vcap_logging', :require => ['vcap/logging']
 
