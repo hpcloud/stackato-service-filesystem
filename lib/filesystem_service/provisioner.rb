@@ -131,6 +131,7 @@ class VCAP::Services::Filesystem::Provisioner < VCAP::Services::Base::Provisione
     raise FilesystemError.new(FilesystemError::FILESYSTEM_FIND_INSTANCE_FAILED, instance_id) if svc == nil
 
     SA::cleanup_filesystem_instance(instance_id)
+    @prov_svcs.delete(instance_id)
     bindings = find_all_bindings(instance_id)
     bindings.each do |b|
       @prov_svcs.delete(b[:service_id])
