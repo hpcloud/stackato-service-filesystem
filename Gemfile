@@ -12,9 +12,9 @@ gem "thin"
 
 gem "net-ssh"
 
-gem 'vcap_common', :require => ['vcap/common', 'vcap/component'], :path => '../../common'
+gem 'vcap_common', :require => ['vcap/common', 'vcap/component', 'vcap/util'], :path => '../../common'
 gem 'vcap_logging', '>=0.1.3', :require => ['vcap/logging']
-gem 'vcap_services_base'
+gem "vcap_services_base", :path => "../base"
 
 group :test do
   gem "rake"
