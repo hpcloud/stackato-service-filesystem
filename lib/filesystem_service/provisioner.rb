@@ -6,6 +6,7 @@ require "filesystem_service/common"
 require "filesystem_service/error"
 require "uuidtools"
 require "vcap/sysadm"
+require "doozer"
 
 class VCAP::Services::Filesystem::Provisioner < VCAP::Services::Base::Provisioner
 
@@ -190,8 +191,8 @@ class VCAP::Services::Filesystem::Provisioner < VCAP::Services::Base::Provisione
   end
 
   def fs_config
-    config_file = YAML.load_file(FILESYSTEM_CONFIG_FILE)
-    config = VCAP.symbolize_keys(config_file)
+    config, config_rev = Doozer.fake_config_file_load(FILESYSTEM_CONFIG_FILE)
+    config = VCAP.symbolize_keys(config)
     config
   end
 end

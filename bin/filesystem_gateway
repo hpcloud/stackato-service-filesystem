@@ -11,6 +11,10 @@ require 'filesystem_service/provisioner'
 
 class VCAP::Services::Filesystem::Gateway < VCAP::Services::Base::Gateway
 
+  def initialize
+    @component_id = "filesystem_gateway"
+  end
+
   def provisioner_class
     VCAP::Services::Filesystem::Provisioner
   end
