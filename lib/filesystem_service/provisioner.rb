@@ -68,6 +68,16 @@ class VCAP::Services::Filesystem::Provisioner < VCAP::Services::Base::Provisione
     end
   end
 
+  def prov_svcs_count
+    count = 0
+    @prov_svcs.each do |k, prov|
+      next if prov[:configuration] && prov[:configuration]["data"] && prov[:configuration]["data"]["binding_options"]
+      count += 1
+    end
+
+    count
+  end
+
   def provision_service(request, prov_handle=nil, &blk)
     @logger.debug("[#{service_description}] Attempting to provision instance (request=#{request.extract})")
     name = UUIDTools::UUID.random_create.to_s
@@ -75,7 +85,7 @@ class VCAP::Services::Filesystem::Provisioner < VCAP::Services::Base::Provisione
     per_fs   = fs_config[:max_fs_size] # in MB
     total_fs = fs_config[:available_storage]
 
-    if (total_fs - @prov_svcs.length * per_fs) < per_fs
+    if (total_fs - prov_svcs_count * per_fs) < per_fs
       @logger.warn("Insufficient space, requesting #{per_fs}MB, have #{@prov_svcs} provisioned services")
       raise FilesystemError.new(FilesystemError::FILESYSTEM_INSUFFICIENT_SPACE)
     end
