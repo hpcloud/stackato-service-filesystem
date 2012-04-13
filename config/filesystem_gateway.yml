@@ -1,5 +1,5 @@
 ---
-#cloud_controller_uri: api.vcap.me
+cloud_controller_uri: api.vcap.me
 service:
   name: filesystem
   version: "1.0"
