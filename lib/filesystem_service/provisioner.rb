@@ -82,7 +82,6 @@ class VCAP::Services::Filesystem::Provisioner < VCAP::Services::Base::Provisione
     @logger.debug("[#{service_description}] Attempting to provision instance (request=#{request.extract})")
     name = UUIDTools::UUID.random_create.to_s
 
-    p @vcap_config.inspect
     per_fs   = @vcap_config[:max_fs_size] # in MB
     total_fs = @vcap_config[:available_storage]
 
