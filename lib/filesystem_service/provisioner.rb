@@ -82,8 +82,9 @@ class VCAP::Services::Filesystem::Provisioner < VCAP::Services::Base::Provisione
     @logger.debug("[#{service_description}] Attempting to provision instance (request=#{request.extract})")
     name = UUIDTools::UUID.random_create.to_s
 
-    per_fs   = fs_config[:max_fs_size] # in MB
-    total_fs = fs_config[:available_storage]
+    p @vcap_config.inspect
+    per_fs   = @vcap_config[:max_fs_size] # in MB
+    total_fs = @vcap_config[:available_storage]
 
     if (total_fs - prov_svcs_count * per_fs) < per_fs
       @logger.warn("Insufficient space, requesting #{per_fs}MB, have #{@prov_svcs} provisioned services")
@@ -109,7 +110,7 @@ class VCAP::Services::Filesystem::Provisioner < VCAP::Services::Base::Provisione
       "private_key" => instance["private_key"],
       "user"        => instance["user"],
       "dir"         => instance["dir"],
-      "host"	    => fs_config[:host],
+      "host"	    => @vcap_config[:host],
     }
 
     svc = {
@@ -198,11 +199,5 @@ class VCAP::Services::Filesystem::Provisioner < VCAP::Services::Base::Provisione
   def unbind_instance(instance_id, handle_id, binding_options, &blk)
     @logger.debug("[#{service_description}] Attempting to unbind to service #{instance_id}")
     blk.call(success())
-  end
-
-  def fs_config
-    config, config_rev = Doozer.fake_config_file_load(FILESYSTEM_CONFIG_FILE)
-    config = VCAP.symbolize_keys(config)
-    config
   end
 end
