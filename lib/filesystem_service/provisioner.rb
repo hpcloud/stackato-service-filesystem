@@ -13,9 +13,6 @@ class VCAP::Services::Filesystem::Provisioner < VCAP::Services::Base::Provisione
   include VCAP::Services::Filesystem::Common
   include VCAP::Services::Filesystem
 
-  config_base_dir = ENV["CLOUD_FOUNDRY_CONFIG_PATH"] || File.join(File.dirname(__FILE__), '..', 'config')
-  FILESYSTEM_CONFIG_FILE = File.join(config_base_dir, 'filesystem_gateway.yml')
-
   def initialize(options)
     super(options)
   end
