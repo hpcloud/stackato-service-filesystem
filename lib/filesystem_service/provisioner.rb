@@ -80,9 +80,8 @@ class VCAP::Services::Filesystem::Provisioner < VCAP::Services::Base::Provisione
     name = UUIDTools::UUID.random_create.to_s
 
     per_fs   = @vcap_config[:max_fs_size] # in MB
-    total_fs = @vcap_config[:available_storage]
 
-    if (total_fs - prov_svcs_count * per_fs) < per_fs
+    if (@vcap_config[:capacity] - prov_svcs_count * capacity_unit) < 1
       @logger.warn("Insufficient space, requesting #{per_fs}MB, have #{@prov_svcs} provisioned services")
       raise FilesystemError.new(FilesystemError::FILESYSTEM_INSUFFICIENT_SPACE)
     end

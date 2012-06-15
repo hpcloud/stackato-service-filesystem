@@ -16,7 +16,7 @@ mbus: nats://localhost:4222
 pid: /var/vcap/sys/run/filesystem_service.pid
 
 max_fs_size: 100 # in MB
-available_storage: 1024 # in MB
+capacity: 20 # slots
 
 #backends:
 #  - host: 10.0.0.1
