@@ -23,10 +23,10 @@ class VCAP::Services::Filesystem::Provisioner < VCAP::Services::Base::Provisione
     reset_orphan_stat
     @handles_for_check_orphan = handles.deep_dup
     instances_list = []
-    Dir.foreach("/var/vcap/services/filesystem/storage") do |child|
+    Dir.foreach(@vcap_config[:base_dir]) do |child|
       unless child == "." || child ==".."
         child.gsub! "filesystem-", ""
-        instances_list << child if File.directory?(File.join("/var/vcap/services/filesystem/storage", child))
+        instances_list << child if File.directory?(File.join(@vcap_config[:base_dir], child))
       end
     end
     nid = "gateway"
