@@ -17,6 +17,10 @@ class VCAP::Services::Filesystem::Provisioner < VCAP::Services::Base::Provisione
     super(options)
   end
 
+  def capacity_unit
+    1 # to be abstracted once split into node+gateway
+  end
+
   # Only check instances orphans, there is no binding orphan of filesystem service
   def check_orphan(handles, &blk)
     @logger.debug("[#{service_description}] Check if there are orphans")
