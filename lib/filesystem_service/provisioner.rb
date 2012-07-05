@@ -6,7 +6,6 @@ require "filesystem_service/common"
 require "filesystem_service/error"
 require "uuidtools"
 require "vcap/sysadm"
-require "doozer"
 
 class VCAP::Services::Filesystem::Provisioner < VCAP::Services::Base::Provisioner
 
