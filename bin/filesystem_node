@@ -23,6 +23,10 @@ class VCAP::Services::Filesystem::NodeBin < VCAP::Services::Base::NodeBin
     config_base_dir = ENV["CLOUD_FOUNDRY_CONFIG_PATH"] || File.join(File.dirname(__FILE__), '..', 'config')
     File.join(config_base_dir, 'filesystem_node.yml')
   end
+
+  def additional_config(options, config)
+    options
+  end
 end
 
 VCAP::Services::Filesystem::NodeBin.new.start

@@ -5,6 +5,8 @@ index: 0
 logging:
   level: debug
 mbus: nats://localhost:4222
+local_db: sqlite3:/var/vcap/services/filesystem/filesystem_node.db # unused for now
+node_id: filesystem_node_1
 pid: /var/vcap/sys/run/filesystem_node.pid
 
 max_fs_size: 100 # in MB
