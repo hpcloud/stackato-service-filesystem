@@ -24,186 +24,118 @@ class VCAP::Services::Filesystem::Node
 
   def initialize(options)
     super(options)
+
+    @available_capacity = options[:capacity]
+    @base_dir = options[:base_dir]
+    FileUtils.mkdir_p(@base_dir)
   end
 
-  # Only check instances orphans, there is no binding orphan of filesystem service
-  def check_orphan(handles, &blk)
-    @logger.debug("[#{service_description}] Check if there are orphans")
-    reset_orphan_stat
-    @handles_for_check_orphan = handles.deep_dup
-    instances_list = []
-    Dir.foreach(@vcap_config[:base_dir]) do |child|
-      unless child == "." || child ==".."
-        child.gsub! "filesystem-", ""
-        instances_list << child if File.directory?(File.join(@vcap_config[:base_dir], child))
-      end
-    end
-    nid = "gateway"
-    instances_list.each do |ins|
-      @staging_orphan_instances[nid] ||= []
-      @staging_orphan_instances[nid] << ins unless @handles_for_check_orphan.index { |h| h["service_id"] == ins }
-    end
-    oi_count = @staging_orphan_instances.values.reduce(0) { |m, v| m += v.count }
-    @logger.debug("Staging Orphans: Instances: #{oi_count}")
-    blk.call(success)
-  rescue => e
-    @logger.warn(e)
-    if e.instance_of? ServiceError
-      blk.call(failure(e))
-    else
-      blk.call(internal_fail)
+  class ProvisionedService
+    attr_accessor :name, :user, :private_key, :plan, :dir
+
+    def initialize
+      @name        = nil
+      @user        = nil
+      @private_key = nil
+      @dir         = nil
+      @plan        = nil
     end
   end
 
-  def purge_orphan(orphan_ins_hash, orphan_bind_hash, &blk)
-    # TODO: just log it now, since remove the direcotory is a dangerous operation.
-    if orphan_ins_hash["gateway"] && !orphan_ins_hash["gateway"].empty?
-      orphan_ins_hash["gateway"].each do |ins|
-        @logger.warn("Instance #{ins} is an orphan")
-      end
-    else
-      @logger.info("No orphons")
-    end
-    blk.call(success)
-  rescue => e
-    @logger.warn(e)
-    if e.instance_of? ServiceError
-      blk.call(failure(e))
-    else
-      blk.call(internal_fail)
+  def announcement
+    @capacity_lock.synchronize do
+      a = {
+          :available_capacity => @capacity,
+          :capacity_unit => capacity_unit
+      }
     end
   end
 
-  def prov_svcs_count
-    count = 0
-    @prov_svcs.each do |k, prov|
-      next if prov[:configuration] && prov[:configuration]["data"] && prov[:configuration]["data"]["binding_options"]
-      count += 1
-    end
-
-    count
-  end
-
-  def provision_service(request, prov_handle=nil, &blk)
-    @logger.debug("[#{service_description}] Attempting to provision instance (request=#{request.extract})")
-    name = UUIDTools::UUID.random_create.to_s
-
-    per_fs = @vcap_config[:max_fs_size] # in MB
-
-    if (@vcap_config[:capacity] - prov_svcs_count * capacity_unit) < 1
-      unless @vcap_config[:allow_over_provisioning]
-        @logger.warn("Insufficient space, requesting #{per_fs}MB, have #{@prov_svcs} provisioned services")
-        raise FilesystemError.new(FilesystemError::FILESYSTEM_INSUFFICIENT_SPACE)
-      end
-    end
-
-    limit = per_fs
-
-    instance = SA::create_filesystem_instance(limit)
-    # instance = {
-    #   "instance_id" => 'u3h5ui245i24g5oi24g5',
-    #   "dir"         => '/var/vcap/services/filesystem/storage/filesystem-u3h5...',
-    #   "private_key" => '-----BEGIN RSA PRIVATE KEY...',
-    # }
-    raise FilesystemError.new(FilesystemError::FILESYSTEM_CREATE_INSTANCE_DIR_FAILED, name) if instance == nil
-
-    prov_req = ProvisionRequest.new
-    prov_req.plan = request.plan
-    # use old credentials to provision a service if provided.
-    prov_req.credentials = prov_handle["credentials"] if prov_handle
-
+  def gen_credentials(instance)
     credentials = {
-      "private_key" => instance["private_key"],
-      "user"        => instance["user"],
-      "dir"         => instance["dir"],
-      "host"	    => @vcap_config[:host],
+      "hostname"    => @local_ip,
+      "host"        => @local_ip,
+      "dir"         => instance.dir,
+      "user"        => instance.user,
+      "private_key" => instance.private_key,
+      "name"        => instance.name,
     }
-
-    svc = {
-      :data => prov_req.dup,
-      :service_id => instance["instance_id"],
-      :credentials => credentials
-    }
-
-    # FIXME: workaround for inconsistant representation of bind handle and provision handle
-    svc_local = {
-      :configuration => prov_req.dup,
-      :service_id => name,
-      :credentials => credentials
-    }
-    @logger.debug("Successfully provisioned service for request #{svc.inspect}")
-    @prov_svcs[svc[:service_id]] = svc_local
-    blk.call(success(svc))
-  rescue => e
-    if e.instance_of? FilesystemError
-      blk.call(failure(e))
-    else
-      @logger.warn(e)
-      blk.call(internal_fail)
-    end
   end
 
-  def unprovision_service(instance_id, &blk)
-    @logger.debug("[#{service_description}] Attempting to unprovision instance (instance id=#{instance_id}")
-    svc = @prov_svcs[instance_id]
-    raise FilesystemError.new(FilesystemError::FILESYSTEM_FIND_INSTANCE_FAILED, instance_id) if svc == nil
+  def provision(plan, credentials=nil, db_file = nil)
+    instance = ProvisionedService.new
+    if credentials
+      instance.name        = credentials["name"]
+      instance.user        = credentials["user"]
+      instance.dir         = credentials["dir"]
+      instance.private_key = credentials["private_key"]
+    else
+      begin
+        per_fs = @vcap_config[:max_fs_size] # in MB
 
+        if (@vcap_config[:capacity] - @capacity) < 1
+          unless @vcap_config[:allow_over_provisioning]
+            @logger.warn("Insufficient space, requesting #{per_fs}MB, have #{@capacity} provisioned services")
+            raise FilesystemError.new(FilesystemError::FILESYSTEM_INSUFFICIENT_SPACE)
+          end
+        end
+      
+        limit = per_fs
+
+        fs_instance = SA::create_filesystem_instance(limit)
+        # instance = {
+        #   "instance_id" => 'u3h5ui245i24g5oi24g5',
+        #   "dir"         => '/var/vcap/services/filesystem/storage/filesystem-u3h5...',
+        #   "private_key" => '-----BEGIN RSA PRIVATE KEY...',
+        # }
+        raise FilesystemError.new(FilesystemError::FILESYSTEM_CREATE_INSTANCE_DIR_FAILED, name) if instance == nil
+
+        instance.name        = fs_instance["instance_id"]
+        instance.private_key = fs_instance["private_key"]
+        instance.user        = fs_instance["user"]
+        instance.dir         = fs_instance["dir"]
+      rescue => e
+        SA::cleanup_filesystem_instance(instance.id)
+        raise e
+      end
+    end
+
+    gen_credentials(instance)
+  end
+
+  def unprovision(instance_id, credentials_list = [])
+    @logger.info("unprovisioning instance: #{instance_id}")
     SA::cleanup_filesystem_instance(instance_id)
-    @prov_svcs.delete(instance_id)
-    bindings = find_all_bindings(instance_id)
-    bindings.each do |b|
-      @prov_svcs.delete(b[:service_id])
-    end
-    blk.call(success())
-  rescue => e
-    if e.instance_of? FilesystemError
-      blk.call(failure(e))
-    else
-      @logger.warn(e)
-      blk.call(internal_fail)
-    end
+    {}
   end
 
-  def bind_instance(instance_id, binding_options, bind_handle=nil, &blk)
-    @logger.debug("[#{service_description}] Attempting to bind to service #{instance_id}")
-    svc = @prov_svcs[instance_id]
-    raise FilesystemError.new(FilesystemError::FILESYSTEM_FIND_INSTANCE_FAILED, instance_id) if svc == nil
+  def get_instance(name)
+    svc = ProvisionedService.new
+    svc.name = name
+    svc.user = name
+    svc.dir  = File.join(@base_dir, name)
 
-    #FIXME options = {} currently, should parse it in future.
-    request = BindRequest.new
-    request.name = instance_id
-    request.bind_opts = binding_options
-    service_id = nil
-    if bind_handle
-      request.credentials = bind_handle["credentials"]
-      service_id = bind_handle["service_id"]
-    else
-      service_id = UUIDTools::UUID.random_create.to_s
-    end
+    raise FilesystemError.new(FilesystemError::FILESYSTEM_FIND_INSTANCE_FAILED, name) unless File.directory? svc.dir
 
-    # Save binding-options in :data section of configuration
-    config = svc[:configuration].clone
-    config['data'] ||= {}
-    config['data']['binding_options'] = binding_options
-    res = {
-      :service_id => service_id,
-      :configuration => config,
-      :credentials => svc[:credentials]
-    }
-    @logger.debug("[#{service_description}] Binded: #{res.inspect}")
-    @prov_svcs[res[:service_id]] = res
-    blk.call(success(res))
-  rescue => e
-    if e.instance_of? FilesystemError
-      blk.call(failure(e))
-    else
-      @logger.warn(e)
-      blk.call(internal_fail)
-    end
+    private_key_storage = File.join(svc.dir, ".ssh", "id_rsa")
+    raise FilesystemError.new(FilesystemError::FILESYSTEM_FIND_INSTANCE_FAILED, name) unless File.file? private_key_storage
+
+    svc.private_key = IO.read(private_key_storage)
+
+    svc
   end
 
-  def unbind_instance(instance_id, handle_id, binding_options, &blk)
-    @logger.debug("[#{service_description}] Attempting to unbind to service #{instance_id}")
-    blk.call(success())
+  def bind(instance_id, binding_options = :all, credentials = nil)
+    instance = nil
+    if credentials
+      instance = get_instance(credentials["name"])
+    else
+      instance = get_instance(instance_id)
+    end
+    gen_credentials(instance)
+  end
+
+  def unbind(credentials)
+    {}
   end
 end
