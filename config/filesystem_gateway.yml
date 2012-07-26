@@ -14,3 +14,4 @@ logging:
 mbus: nats://localhost:4222
 pid: /var/vcap/sys/run/filesystem_service.pid
 plan: free
+allow_over_provisioning: false

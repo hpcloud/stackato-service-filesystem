@@ -11,6 +11,5 @@ pid: /var/vcap/sys/run/filesystem_node.pid
 
 max_fs_size: 100 # in MB
 capacity: 20 # slots
-allow_over_provisioning: false
 
 base_dir: /var/vcap/services/filesystem/storage
