@@ -27,6 +27,7 @@ class VCAP::Services::Filesystem::Node
 
     @available_capacity = options[:capacity]
     @base_dir = options[:base_dir]
+    @max_fs_size = options[:max_fs_size]
     FileUtils.mkdir_p(@base_dir)
   end
 
@@ -71,18 +72,7 @@ class VCAP::Services::Filesystem::Node
       instance.private_key = credentials["private_key"]
     else
       begin
-        per_fs = @vcap_config[:max_fs_size] # in MB
-
-        if (@vcap_config[:capacity] - @capacity) < 1
-          unless @vcap_config[:allow_over_provisioning]
-            @logger.warn("Insufficient space, requesting #{per_fs}MB, have #{@capacity} provisioned services")
-            raise FilesystemError.new(FilesystemError::FILESYSTEM_INSUFFICIENT_SPACE)
-          end
-        end
-      
-        limit = per_fs
-
-        fs_instance = SA::create_filesystem_instance(limit)
+        fs_instance = SA::create_filesystem_instance(@max_fs_size)
         # instance = {
         #   "instance_id" => 'u3h5ui245i24g5oi24g5',
         #   "dir"         => '/var/vcap/services/filesystem/storage/filesystem-u3h5...',
@@ -95,7 +85,7 @@ class VCAP::Services::Filesystem::Node
         instance.user        = fs_instance["user"]
         instance.dir         = fs_instance["dir"]
       rescue => e
-        SA::cleanup_filesystem_instance(instance.id)
+        SA::cleanup_filesystem_instance(instance.name)
         raise e
       end
     end
@@ -112,15 +102,14 @@ class VCAP::Services::Filesystem::Node
   def get_instance(name)
     svc = ProvisionedService.new
     svc.name = name
-    svc.user = name
-    svc.dir  = File.join(@base_dir, name)
+    svc.user = "stackatofs-#{name}"
+    svc.dir  = File.join(@base_dir, svc.user)
 
     raise FilesystemError.new(FilesystemError::FILESYSTEM_FIND_INSTANCE_FAILED, name) unless File.directory? svc.dir
 
-    private_key_storage = File.join(svc.dir, ".ssh", "id_rsa")
-    raise FilesystemError.new(FilesystemError::FILESYSTEM_FIND_INSTANCE_FAILED, name) unless File.file? private_key_storage
-
-    svc.private_key = IO.read(private_key_storage)
+    private_key = SA::pull_private_key(svc.name)
+    raise FilesystemError.new(FilesystemError::FILESYSTEM_FIND_INSTANCE_FAILED, name) if private_key == ""
+    svc.private_key = private_key
 
     svc
   end

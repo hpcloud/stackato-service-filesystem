@@ -25,6 +25,7 @@ class VCAP::Services::Filesystem::NodeBin < VCAP::Services::Base::NodeBin
   end
 
   def additional_config(options, config)
+    options[:max_fs_size] = parse_property(config, "max_fs_size", Integer)
     options
   end
 end
