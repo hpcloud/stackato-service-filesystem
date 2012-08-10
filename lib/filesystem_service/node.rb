@@ -103,7 +103,7 @@ class VCAP::Services::Filesystem::Node
     svc = ProvisionedService.new
     svc.name = name
     svc.user = "stackatofs-#{name}"
-    svc.dir  = File.join(@base_dir, svc.user)
+    svc.dir  = File.join(@base_dir, svc.user, "storage")
 
     raise FilesystemError.new(FilesystemError::FILESYSTEM_FIND_INSTANCE_FAILED, name) unless File.directory? svc.dir
 
