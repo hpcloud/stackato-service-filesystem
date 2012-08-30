@@ -19,7 +19,6 @@ gem "vcap_services_base", :path => "../base"
 group :test do
   gem "rake"
   gem "rspec"
-  gem "rcov"
   gem "simplecov"
   gem "simplecov-rcov"
   gem "ci_reporter"
