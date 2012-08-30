@@ -2,7 +2,7 @@ PATH
   remote: ../../common
   specs:
     vcap_common (0.99)
-      eventmachine (~> 0.12.11.cloudfoundry.2)
+      eventmachine (~> 1.0.0.rc4)
       logging (>= 1.5.0)
       nats
       posix-spawn
@@ -70,7 +70,7 @@ GEM
       escape_utils
       eventmachine (>= 0.12.9)
     escape_utils (0.2.4)
-    eventmachine (0.12.11.cloudfoundry.3)
+    eventmachine (1.0.0.rc4)
     eventmachine_httpserver (0.2.1)
     fastercsv (1.5.4)
     json (1.4.6)
