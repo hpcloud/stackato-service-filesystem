@@ -7,7 +7,7 @@ PATH
       posix-spawn (~> 0.3.6)
       stackato-kato
       thin (~> 1.4.1)
-      yajl-ruby (~> 0.8.3)
+      yajl-ruby (~> 1.1.0)
 
 PATH
   remote: ../base
@@ -162,7 +162,7 @@ GEM
       subcommand (>= 1.0.6)
       term-ansicolor
       uuid (~> 2.3.5)
-      yajl-ruby (>= 0.8.2)
+      yajl-ruby (~> 1.1.0)
     stringex (1.2.2)
     subcommand (1.0.6)
     systemu (2.5.2)
@@ -179,7 +179,7 @@ GEM
       rake
     vegas (0.1.11)
       rack (>= 1.0.0)
-    yajl-ruby (0.8.3)
+    yajl-ruby (1.1.0)
 
 PLATFORMS
   ruby
