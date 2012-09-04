@@ -102,8 +102,6 @@ GEM
     fraggle (4.0.1)
       beefcake (~> 0.3)
       eventmachine
-    fraggle-block (0.2.0)
-      beefcake (~> 0.3)
     http_parser.rb (0.5.3)
     json (1.4.6)
     json_pure (1.7.5)
@@ -157,7 +155,6 @@ GEM
       em-http-request (~> 1.0.0)
       eventmachine (~> 1.0.0.rc4)
       fraggle
-      fraggle-block
       mustache
       subcommand (>= 1.0.6)
       term-ansicolor
