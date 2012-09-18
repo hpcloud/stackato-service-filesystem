@@ -117,6 +117,7 @@ GEM
       json_pure (>= 1.7.3)
       thin (>= 1.4.1)
     net-ssh (2.5.2)
+    pg (0.14.1)
     posix-spawn (0.3.6)
     rack (1.4.1)
     rake (0.9.2.2)
@@ -153,12 +154,13 @@ GEM
     sinatra (1.2.8)
       rack (~> 1.1)
       tilt (>= 1.2.2, < 2.0)
-    stackato-kato (1.0.1)
+    stackato-kato (1.0.2)
       em-http-request (~> 1.0.0)
       eventmachine (~> 1.0.0)
-      fraggle
-      fraggle-block
+      fraggle (= 4.0.1)
+      fraggle-block (= 0.2.0)
       mustache
+      pg
       subcommand (>= 1.0.6)
       term-ansicolor
       uuid (~> 2.3.5)
