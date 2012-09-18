@@ -1,4 +1,4 @@
-source :rubygems
+source (ENV['RUBYGEMS_MIRROR'] or :rubygems)
 
 gem 'eventmachine'
 gem "em-http-request"
