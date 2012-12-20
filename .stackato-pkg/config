@@ -7,8 +7,7 @@
 
 PKG_NAME="stackato-vcap-filesystem"
 PKG_VERSION="auto"
-PKG_VERSION_COUNTER="auto"
-PKG_VERSION_HASH="auto"
+#PKG_VERSION_COUNTER="auto"
 PKG_ARCH="all"
 PKG_DESCR_SHORT="stackato-vcap-filesystem"
 PKG_DESCR_LONG="Packaged distribution of filesystem."
