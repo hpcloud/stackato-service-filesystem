@@ -74,7 +74,7 @@ class VCAP::Services::Filesystem::Node
       instance.private_key = credentials["private_key"]
     else
       begin
-        fs_instance = fence.create_filesystem_instance( :limit => @max_fs_size)
+        fs_instance = fence.create_filesystem_instance( :limit => @max_fs_size )
         # instance = {
         #   "instance_id" => 'u3h5ui245i24g5oi24g5',
         #   "dir"         => '/var/vcap/services/filesystem/storage/filesystem-u3h5...',
@@ -87,7 +87,7 @@ class VCAP::Services::Filesystem::Node
         instance.user        = fs_instance["user"]
         instance.dir         = fs_instance["dir"]
       rescue => e
-        fence.cleanup_filesystem_instance(instance.name)
+        fence.cleanup_filesystem_instance( :service_id => instance.name )
         raise e
       end
     end
