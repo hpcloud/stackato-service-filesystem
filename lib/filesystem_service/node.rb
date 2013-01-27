@@ -1,9 +1,10 @@
 # Copyright (c) 2009-2011 VMware, Inc.
 $:.unshift File.join(File.dirname(__FILE__), ".")
+$:.unshift File.join( ENV['HOME'], 'stackato', 'vcap', 'fence', 'fence-client', 'lib' )
 
 require "base/node"
 require "uuidtools"
-require "vcap/sysadm"
+require "fence/client"
 
 module VCAP
   module Services
@@ -65,6 +66,7 @@ class VCAP::Services::Filesystem::Node
 
   def provision(plan, credentials=nil, db_file = nil)
     instance = ProvisionedService.new
+    fence = Fence::Client.new
     if credentials
       instance.name        = credentials["name"]
       instance.user        = credentials["user"]
@@ -72,7 +74,7 @@ class VCAP::Services::Filesystem::Node
       instance.private_key = credentials["private_key"]
     else
       begin
-        fs_instance = SA::create_filesystem_instance(@max_fs_size)
+        fs_instance = fence.create_filesystem_instance( :limit => @max_fs_size )
         # instance = {
         #   "instance_id" => 'u3h5ui245i24g5oi24g5',
         #   "dir"         => '/var/vcap/services/filesystem/storage/filesystem-u3h5...',
@@ -85,7 +87,7 @@ class VCAP::Services::Filesystem::Node
         instance.user        = fs_instance["user"]
         instance.dir         = fs_instance["dir"]
       rescue => e
-        SA::cleanup_filesystem_instance(instance.name)
+        fence.cleanup_filesystem_instance( :service_id => instance.name )
         raise e
       end
     end
@@ -95,7 +97,7 @@ class VCAP::Services::Filesystem::Node
 
   def unprovision(instance_id, credentials_list = [])
     @logger.info("unprovisioning instance: #{instance_id}")
-    SA::cleanup_filesystem_instance(instance_id)
+    Fence::Client.new.cleanup_filesystem_instance( :service_id => instance_id )
     {}
   end
 
@@ -107,7 +109,7 @@ class VCAP::Services::Filesystem::Node
 
     raise FilesystemError.new(FilesystemError::FILESYSTEM_FIND_INSTANCE_FAILED, name) unless File.directory? svc.dir
 
-    private_key = SA::pull_private_key(svc.name)
+    private_key = Fence::Client.new.pull_private_key( :service_id => svc.name )
     raise FilesystemError.new(FilesystemError::FILESYSTEM_FIND_INSTANCE_FAILED, name) if private_key == ""
     svc.private_key = private_key
 
