@@ -1,10 +1,10 @@
 # Copyright (c) 2009-2011 VMware, Inc.
 $:.unshift File.join(File.dirname(__FILE__), ".")
-$:.unshift File.join( ENV['HOME'], 'stackato', 'vcap', 'fence', 'em-fence-client', 'lib' )
+$:.unshift File.join( ENV['HOME'], 'stackato', 'vcap', 'fence', 'fence-client', 'lib' )
 
 require "base/node"
 require "uuidtools"
-require "em/fence/client"
+require "fence/client"
 
 module VCAP
   module Services
@@ -66,7 +66,7 @@ class VCAP::Services::Filesystem::Node
 
   def provision(plan, credentials=nil, db_file = nil)
     instance = ProvisionedService.new
-    fence = EM::Fence::Client.new
+    fence = Fence::Client.new
     if credentials
       instance.name        = credentials["name"]
       instance.user        = credentials["user"]
@@ -97,7 +97,7 @@ class VCAP::Services::Filesystem::Node
 
   def unprovision(instance_id, credentials_list = [])
     @logger.info("unprovisioning instance: #{instance_id}")
-    EM::Fence::Client.new.cleanup_filesystem_instance( :service_id => instance_id )
+    Fence::Client.new.cleanup_filesystem_instance( :service_id => instance_id )
     {}
   end
 
@@ -109,7 +109,7 @@ class VCAP::Services::Filesystem::Node
 
     raise FilesystemError.new(FilesystemError::FILESYSTEM_FIND_INSTANCE_FAILED, name) unless File.directory? svc.dir
 
-    private_key = EM::Fence::Client.new.pull_private_key( :service_id => svc.name )
+    private_key = Fence::Client.new.pull_private_key( :service_id => svc.name )
     raise FilesystemError.new(FilesystemError::FILESYSTEM_FIND_INSTANCE_FAILED, name) if private_key == ""
     svc.private_key = private_key
 
