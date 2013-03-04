@@ -80,7 +80,7 @@ class VCAP::Services::Filesystem::Node
         #   "dir"         => '/var/vcap/services/filesystem/storage/filesystem-u3h5...',
         #   "private_key" => '-----BEGIN RSA PRIVATE KEY...',
         # }
-        raise FilesystemError.new(FilesystemError::FILESYSTEM_CREATE_INSTANCE_DIR_FAILED, name) if instance == nil
+        raise FilesystemError.new(FilesystemError::FILESYSTEM_CREATE_INSTANCE_DIR_FAILED, name) if fs_instance == nil
 
         instance.name        = fs_instance["instance_id"]
         instance.private_key = fs_instance["private_key"]
