@@ -32,6 +32,7 @@ class VCAP::Services::Filesystem::Node
     FileUtils.mkdir_p(@base_dir)
   end
 
+
   class ProvisionedService
     attr_accessor :name, :user, :private_key, :plan, :dir
 
@@ -44,9 +45,16 @@ class VCAP::Services::Filesystem::Node
     end
   end
 
+  def pre_send_announcement
+    @capacity_lock.synchronize do
+      ProvisionedService.all.each do |provisionedservice|
+      @capacity -= capacity_unit
+    end
+  end
+
   def announcement
     @capacity_lock.synchronize do
-      a = {
+      {
           :available_capacity => @capacity,
           :capacity_unit => capacity_unit
       }
