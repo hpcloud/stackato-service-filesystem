@@ -48,7 +48,8 @@ class VCAP::Services::Filesystem::Node
   def pre_send_announcement
     @capacity_lock.synchronize do
       ProvisionedService.all.each do |provisionedservice|
-      @capacity -= capacity_unit
+        @capacity -= capacity_unit
+      end
     end
   end
 
