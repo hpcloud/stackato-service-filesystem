@@ -20,7 +20,7 @@ PATH
       eventmachine (~> 1.0.0.rc4)
       eventmachine_httpserver (~> 0.2.1)
       json (~> 1.4.6)
-      nats (~> 0.4.22.beta.8)
+      nats (= 0.4.26)
       rake (~> 0.9.2)
       resque (~> 1.23)
       resque-status (~> 0.4.1)
