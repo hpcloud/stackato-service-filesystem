@@ -9,7 +9,7 @@ local_db: sqlite3:/var/vcap/services/filesystem/filesystem_node.db # unused for 
 node_id: filesystem_node_1
 pid: /var/vcap/sys/run/filesystem_node.pid
 
-max_fs_size: 100 # in MB
+max_fs_size: 500 # in MB
 capacity: 20 # slots
 
 base_dir: /var/vcap/services/filesystem/storage
