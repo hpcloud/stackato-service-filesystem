@@ -78,7 +78,7 @@ class VCAP::Services::Filesystem::Node
     }
   end
 
-  def provision(plan, credentials=nil, db_file = nil)
+  def provision(plan, credentials=nil, version=nil, db_file = nil)
     instance = ProvisionedService.new
     fence = Fence::Client.new
     if credentials

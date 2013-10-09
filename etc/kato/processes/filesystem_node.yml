@@ -1,0 +1,6 @@
+# Installed by package stackato-service-filesystem
+---
+name: filesystem_node
+config_origin: /s/code/services/filesystem/config/filesystem_node.yml
+roles:
+  - filesystem

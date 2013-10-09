@@ -1,0 +1,6 @@
+# Installed by package stackato-service-filesystem
+---
+name: filesystem_gateway
+config_origin: /s/code/services/filesystem/config/filesystem_gateway.yml
+roles:
+  - filesystem

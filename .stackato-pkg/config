@@ -1,0 +1,17 @@
+# Package configuration for stackato-service-filesystem
+
+# Values here will override environment variables and will be overridden
+# by command options.  This is a shell file so you can use it to perform
+# arbitrary actions.  The main intent is to set up various PKG_*
+# variables used to configure and generate the package.
+
+PKG_NAME="stackato-service-filesystem"
+PKG_VERSION="auto"
+#PKG_VERSION_COUNTER="auto"
+PKG_ARCH="all"
+PKG_DESCR_SHORT="stackato-service-filesystem"
+PKG_DESCR_LONG="Packaged distribution Stackato's filesystem service"
+PKG_GITDESCRIBE="GITDESCRIBE-PKG"
+
+PKG_DEPENDS="stackato-rubies, stackato-services-base"
+PKG_BUILD_DEPENDS=""
