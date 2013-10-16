@@ -20,7 +20,7 @@ PATH
 PATH
   remote: ../base
   specs:
-    vcap_services_base (0.1.17)
+    vcap_services_base (0.2.3)
       cf-uaa-lib
       curb (~> 0.7.16)
       data_mapper (~> 1.2)
@@ -348,7 +348,7 @@ DEPENDENCIES
   uuidtools (= 2.1.4)
   vcap_common (= 2.2.1)!
   vcap_logging (= 1.0.1)
-  vcap_services_base (= 0.1.17)!
+  vcap_services_base (= 0.2.3)!
   vegas (= 0.1.11)
   vic (= 1.0.0)
   xmlparser (= 0.7.2.1)

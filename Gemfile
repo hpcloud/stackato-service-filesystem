@@ -79,7 +79,7 @@ gem 'tilt'              ,    '1.4.1'
 gem 'uuidtools'         ,    '2.1.4'
 gem 'vcap_common'       ,    '2.2.1', :path => '../../common', :require => ['vcap/common', 'vcap/component', 'vcap/util']
 gem 'vcap_logging'      ,    '1.0.1', :require => ['vcap/logging']
-gem 'vcap_services_base',   '0.1.17', :path => "../base"
+gem 'vcap_services_base',   '0.2.3', :path => "../base"
 gem 'vegas'             ,   '0.1.11'
 gem 'vic'               ,    '1.0.0'
 gem 'xmlparser'         ,  '0.7.2.1'
