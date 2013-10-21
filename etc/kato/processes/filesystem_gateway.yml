@@ -2,5 +2,6 @@
 ---
 name: filesystem_gateway
 config_origin: /s/code/services/filesystem/config/filesystem_gateway.yml
+sets_running_status: true
 roles:
   - filesystem
