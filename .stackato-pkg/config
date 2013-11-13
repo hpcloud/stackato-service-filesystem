@@ -6,6 +6,7 @@
 # variables used to configure and generate the package.
 
 KATO_GEM_VERSION="2.11.0"
+
 PKG_NAME="stackato-service-filesystem"
 PKG_VERSION="auto"
 #PKG_VERSION_COUNTER="auto"
@@ -14,5 +15,5 @@ PKG_DESCR_SHORT="stackato-service-filesystem"
 PKG_DESCR_LONG="Packaged distribution Stackato's filesystem service"
 PKG_GITDESCRIBE="GITDESCRIBE-PKG"
 
-PKG_DEPENDS="stackato-rubies, stackato-services-base, stackato-kato-core-ng-$KATO_GEM_VERSION"
+PKG_DEPENDS="stackato-rubies, stackato-services-base, stackato-kato-core-ng-$KATO_GEM_VERSION (=auto)"
 PKG_BUILD_DEPENDS=""
