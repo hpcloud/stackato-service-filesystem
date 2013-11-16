@@ -8,20 +8,29 @@ source (ENV['RUBYGEMS_MIRROR'] or 'https://rubygems.org')
 
 ruby '1.9.3' # prevents hard-to-diagnose errors with bundle install
 
-gem 'addressable'       ,    '2.2.8'
-gem 'bcrypt-ruby'       ,    '3.0.0'
-gem 'beefcake'          ,    '0.3.7'
-gem 'builder'           ,    '3.2.0', :groups => [:test]
-gem 'ci_reporter'       ,    '1.8.4', :groups => [:test]
+gem 'activesupport'     ,    '4.0.1'
+gem 'addressable'       ,    '2.3.5'
+gem 'atomic'            ,   '1.1.14'
+gem 'axiom-types'       ,    '0.0.5'
+gem 'backports'         ,    '3.3.5'
+gem 'bcrypt-ruby'       ,    '3.1.2'
+gem 'beefcake'          ,    '0.4.0'
+gem 'builder'           ,    '3.2.2', :groups => [:test]
+gem 'cf-uaa-lib'        ,    '2.0.0'
+gem 'ci_reporter'       ,    '1.9.0', :groups => [:test]
+gem 'coercible'         ,    '0.2.0'
+gem 'colored'           ,      '1.2'
 gem 'cookiejar'         ,    '0.3.0'
 gem 'curb'              ,   '0.7.18'
 gem 'daemons'           ,    '1.1.9'
+gem 'data_mapper'       ,    '1.2.0'
 gem 'data_objects'      ,  '0.10.13'
 gem 'datamapper'        ,    '1.2.0'
-gem 'diff-lcs'          ,    '1.2.4', :groups => [:test]
+gem 'descendants_tracker',    '0.0.3'
+gem 'diff-lcs'          ,    '1.2.5', :groups => [:test]
 gem 'dm-aggregates'     ,    '1.2.0'
 gem 'dm-constraints'    ,    '1.2.0'
-gem 'dm-core'           ,    '1.2.0'
+gem 'dm-core'           ,    '1.2.1'
 gem 'dm-do-adapter'     ,    '1.2.0'
 gem 'dm-migrations'     ,    '1.2.0'
 gem 'dm-serializer'     ,    '1.2.2'
@@ -31,57 +40,78 @@ gem 'dm-transactions'   ,    '1.2.0'
 gem 'dm-types'          ,    '1.2.2'
 gem 'dm-validations'    ,    '1.2.0'
 gem 'do_sqlite3'        ,  '0.10.13'
+gem 'docile'            ,    '1.1.0', :groups => [:test]
 gem 'docopt'            ,    '0.5.0'
-gem 'em-hiredis'        ,    '0.2.1'
-gem 'em-http-request'   ,    '1.0.3'
-gem 'em-socksify'       ,    '0.2.1'
+gem 'em-http-request'   ,    '1.1.1'
+gem 'em-socksify'       ,    '0.3.0'
+gem 'equalizer'         ,    '0.0.7'
 gem 'eventmachine'      ,    '1.0.3'
-gem 'eventmachine-tail' ,    '0.6.4'
 gem 'eventmachine_httpserver',    '0.2.1'
 gem 'fastercsv'         ,    '1.5.5'
-gem 'fraggle'           ,    '4.0.1'
-gem 'fraggle-block'     ,    '0.2.0'
-gem 'hiredis'           ,    '0.4.5'
-gem 'http_parser.rb'    ,    '0.5.3'
+gem 'fluent-logger'     ,    '0.4.6'
+gem 'grape'             ,    '0.6.1'
+gem 'hashie'            ,    '2.0.5'
+gem 'http_parser.rb'    , '0.6.0.beta.2'
+gem 'httpclient'        ,  '2.3.4.1'
+gem 'i18n'              ,    '0.6.5'
+gem 'ice_nine'          ,   '0.10.0'
 gem 'ipaddress'         ,    '0.8.0'
-#gem 'json'              ,    '1.4.6'
-#gem 'json_pure'         ,    '1.8.0'
+gem 'json'              ,    '1.8.1'
+gem 'json_pure'         ,    '1.8.1'
+gem 'lockfile'          ,    '2.1.0', :groups => [:test]
+gem 'membrane'          ,    '0.0.2'
+gem 'mime-types'        ,      '2.0'
+gem 'minitest'          ,    '4.7.5'
 gem 'mono_logger'       ,    '1.1.0'
-#gem 'multi_json'        ,    '1.7.4', :groups => [:test]
+gem 'msgpack'           ,    '0.5.7'
+gem 'multi_json'        ,    '1.8.2', :groups => [:default, :test]
+gem 'multi_xml'         ,    '0.5.5'
+gem 'multipart-post'    ,    '1.2.0'
 gem 'mustache'          ,   '0.99.4'
 gem 'nats'              ,   '0.4.26'
-gem 'net-ssh'           ,    '2.6.7'
+gem 'net-ssh'           ,    '2.7.0'
 gem 'pg'                ,   '0.14.1'
 gem 'posix-spawn'       ,    '0.3.6'
 gem 'rack'              ,    '1.5.2'
-gem 'rack-protection'   ,    '1.5.0'
-gem 'rake'              ,    '0.9.6', :groups => [:test, :default]
-gem 'redis'             ,    '3.0.4'
-gem 'redis-namespace'   ,    '1.3.0'
-gem 'resque'            ,   '1.24.1'
+gem 'rack-accept'       ,    '0.4.5'
+gem 'rack-mount'        ,    '0.8.3'
+gem 'rack-protection'   ,    '1.5.1'
+gem 'rake'              ,   '10.1.0', :groups => [:test, :default]
+gem 'redis'             ,    '3.0.6'
+gem 'redis-namespace'   ,    '1.3.2'
+gem 'resque'            ,   '1.25.1'
 gem 'resque-status'     ,    '0.4.1'
-gem 'rspec'             ,   '2.13.0', :groups => [:test]
-gem 'rspec-core'        ,   '2.13.1', :groups => [:test]
-gem 'rspec-expectations',   '2.13.0', :groups => [:test]
-gem 'rspec-mocks'       ,   '2.13.1', :groups => [:test]
+gem 'rspec'             ,   '2.14.1', :groups => [:test]
+gem 'rspec-core'        ,   '2.14.7', :groups => [:test]
+gem 'rspec-expectations',   '2.14.4', :groups => [:test]
+gem 'rspec-mocks'       ,   '2.14.4', :groups => [:test]
 gem 'ruby-hmac'         ,    '0.4.0'
 gem 'ruby-termios'      ,    '0.9.6'
-gem 'simplecov'         ,    '0.7.1', :groups => [:test]
-gem 'simplecov-html'    ,    '0.7.1', :groups => [:test]
+gem 'rubyzip'           ,    '0.9.9'
+gem 'simplecov'         ,    '0.8.1', :groups => [:test]
+gem 'simplecov-html'    ,    '0.8.0', :groups => [:test]
 gem 'simplecov-rcov'    ,    '0.2.3', :groups => [:test]
-gem 'sinatra'           ,    '1.3.6'
+gem 'sinatra'           ,    '1.4.4'
 gem 'sqlite3'           ,    '1.3.7'
-gem 'stackato-kato'     ,   '2.11.0'
-gem 'stringex'          ,    '1.4.0'
+gem 'squash_ruby'       ,    '1.2.2'
+gem 'stackato-kato'     ,    '3.0.0'
+gem 'steno'             ,    '1.1.0'
+gem 'steno-codec-text'  ,      '0.1'
+gem 'stringex'          ,    '1.5.1'
 gem 'term-ansicolor'    ,    '1.0.7'
-gem 'thin'              ,    '1.5.1'
+gem 'thin'              ,    '1.6.1'
+gem 'thread_safe'       ,    '0.1.3'
 gem 'tilt'              ,    '1.4.1'
+gem 'tzinfo'            ,   '0.3.38'
 gem 'uuidtools'         ,    '2.1.4'
 gem 'vcap_common'       ,    '2.2.1', :path => '../../common', :require => ['vcap/common', 'vcap/component', 'vcap/util']
 gem 'vcap_logging'      ,    '1.0.1', :require => ['vcap/logging']
-gem 'vcap_services_base',   '0.2.3', :path => "../base"
+gem 'vcap_services_base',    '0.2.3', :path => "../base"
 gem 'vegas'             ,   '0.1.11'
-gem 'vic'               ,    '1.0.0'
+gem 'virtus'            ,    '1.0.0'
+gem 'vmstat'            ,    '2.0.0'
+gem 'warden-client'     ,    '0.1.0'
+gem 'warden-protocol'   ,    '0.1.3'
 gem 'xmlparser'         ,  '0.7.2.1'
 gem 'yajl-ruby'         ,    '1.1.0'
 
