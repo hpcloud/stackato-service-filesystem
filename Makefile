@@ -24,7 +24,7 @@ BASEDIR=$(DESTDIR)$(prefix)$(INSTALLBASE)
 INSTDIR=$(DESTDIR)$(prefix)$(DIRNAME)
 
 RSYNC_INCLUDE=--include=etc/filesystem
-RSYNC_EXCLUDE=--exclude=.git* --exclude=Makefile --exclude=.stackato-pkg --exclude=debian --exclude=etc/*
+RSYNC_EXCLUDE=--exclude=/.git* --exclude=/Makefile --exclude=/.stackato-pkg --exclude=/debian --exclude=/etc/*
 
 all:
 	@ true
