@@ -12,7 +12,7 @@ PKG_VERSION="auto"
 PKG_ARCH="all"
 PKG_DESCR_SHORT="stackato-service-filesystem"
 PKG_DESCR_LONG="Packaged distribution of Stackato's filesystem service."
-PKG_GITDESCRIBE="GITDESCRIBE-PKG"
+PKG_GITDESCRIBE=".pkg-gitdescribe"
 
 PKG_DEPENDS="stackato-services-base (=auto), \
 stackato-kato-core-ng-$KATO_GEM_VERSION (=auto), \
