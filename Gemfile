@@ -40,7 +40,7 @@ gem 'dm-transactions'   ,    '1.2.0'
 gem 'dm-types'          ,    '1.2.2'
 gem 'dm-validations'    ,    '1.2.0'
 gem 'do_sqlite3'        ,  '0.10.13'
-gem 'docile'            ,    '1.1.0', :groups => [:test]
+gem 'docile'            ,    '1.1.1', :groups => [:test]
 gem 'docopt'            ,    '0.5.0'
 gem 'em-http-request'   ,    '1.1.1'
 gem 'em-socksify'       ,    '0.3.0'
@@ -48,7 +48,8 @@ gem 'equalizer'         ,    '0.0.7'
 gem 'eventmachine'      ,    '1.0.3'
 gem 'eventmachine_httpserver',    '0.2.1'
 gem 'fastercsv'         ,    '1.5.5'
-gem 'fluent-logger'     ,    '0.4.6'
+gem 'fluent-logger'     ,    '0.4.7'
+gem 'futuroscope'       ,    '0.1.5'
 gem 'grape'             ,    '0.6.1'
 gem 'hashie'            ,    '2.0.5'
 gem 'http_parser.rb'    , '0.6.0.beta.2'
@@ -58,7 +59,6 @@ gem 'ice_nine'          ,   '0.10.0'
 gem 'ipaddress'         ,    '0.8.0'
 gem 'json'              ,    '1.8.1'
 gem 'json_pure'         ,    '1.8.1'
-gem 'lockfile'          ,    '2.1.0', :groups => [:test]
 gem 'membrane'          ,    '0.0.2'
 gem 'mime-types'        ,      '2.0'
 gem 'minitest'          ,    '4.7.5'
@@ -76,7 +76,7 @@ gem 'rack'              ,    '1.5.2'
 gem 'rack-accept'       ,    '0.4.5'
 gem 'rack-mount'        ,    '0.8.3'
 gem 'rack-protection'   ,    '1.5.1'
-gem 'rake'              ,   '10.1.0', :groups => [:test, :default]
+gem 'rake'              ,   '10.1.0', :groups => [:test]
 gem 'redis'             ,    '3.0.6'
 gem 'redis-namespace'   ,    '1.3.2'
 gem 'resque'            ,   '1.25.1'
@@ -88,12 +88,12 @@ gem 'rspec-mocks'       ,   '2.14.4', :groups => [:test]
 gem 'ruby-hmac'         ,    '0.4.0'
 gem 'ruby-termios'      ,    '0.9.6'
 gem 'rubyzip'           ,    '0.9.9'
-gem 'simplecov'         ,    '0.8.1', :groups => [:test]
+gem 'simplecov'         ,    '0.8.2', :groups => [:test]
 gem 'simplecov-html'    ,    '0.8.0', :groups => [:test]
 gem 'simplecov-rcov'    ,    '0.2.3', :groups => [:test]
 gem 'sinatra'           ,    '1.4.4'
 gem 'sqlite3'           ,    '1.3.7'
-gem 'squash_ruby'       ,    '1.2.2'
+gem 'squash_ruby'       ,    '1.2.3'
 gem 'stackato-kato'     ,    '3.0.0'
 gem 'steno'             ,    '1.1.0'
 gem 'steno-codec-text'  ,      '0.1'
@@ -105,7 +105,6 @@ gem 'tilt'              ,    '1.4.1'
 gem 'tzinfo'            ,   '0.3.38'
 gem 'uuidtools'         ,    '2.1.4'
 gem 'vcap_common'       ,    '2.2.1', :path => '../../common', :require => ['vcap/common', 'vcap/component', 'vcap/util']
-gem 'vcap_logging'      ,    '1.0.1', :require => ['vcap/logging']
 gem 'vcap_services_base',    '0.2.3', :path => "../base"
 gem 'vegas'             ,   '0.1.11'
 gem 'virtus'            ,    '1.0.0'
