@@ -68,7 +68,7 @@ gem 'multi_json'        ,    '1.8.2', :groups => [:default, :test]
 gem 'multi_xml'         ,    '0.5.5'
 gem 'multipart-post'    ,    '1.2.0'
 gem 'mustache'          ,   '0.99.4'
-gem 'nats'              ,   '0.4.26'
+gem 'nats'              ,   '0.5.0.beta.12'
 gem 'net-ssh'           ,    '2.7.0'
 gem 'pg'                ,   '0.14.1'
 gem 'posix-spawn'       ,    '0.3.6'
@@ -104,8 +104,8 @@ gem 'thread_safe'       ,    '0.1.3'
 gem 'tilt'              ,    '1.4.1'
 gem 'tzinfo'            ,   '0.3.38'
 gem 'uuidtools'         ,    '2.1.4'
-gem 'vcap_common'       ,    '2.2.1', :path => '../../common', :require => ['vcap/common', 'vcap/component', 'vcap/util']
-gem 'vcap_services_base',    '0.2.3', :path => "../base"
+gem 'vcap_common'       ,    '3.0.0', :path => '../../common', :require => ['vcap/common', 'vcap/component', 'vcap/util']
+gem 'vcap_services_base',    '0.2.6', :path => "../base"
 gem 'vegas'             ,   '0.1.11'
 gem 'virtus'            ,    '1.0.0'
 gem 'vmstat'            ,    '2.0.0'
