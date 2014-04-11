@@ -16,5 +16,5 @@ PKG_GITDESCRIBE=".pkg-gitdescribe"
 
 PKG_DEPENDS="stackato-services-base (=auto), \
 stackato-kato-core-ng-$KATO_GEM_VERSION (=auto), \
-stackato-rubies, quota, sshfs"
+quota, sshfs"
 PKG_BUILD_DEPENDS="build-essential"
