@@ -1,6 +1,6 @@
 [program:filesystem_node]
 directory=/s/code/services/filesystem
-command=/opt/rubies/current/bin/bundle exec bin/filesystem_node
+command=/home/stackato/.rbenv/shims/bundle exec bin/filesystem_node
 priority=30
 redirect_stderr=true
 stdout_logfile=/s/logs/filesystem_node.log
