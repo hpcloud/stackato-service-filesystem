@@ -1,5 +1,7 @@
 source (ENV['RUBYGEMS_MIRROR'] or :rubygems)
 
+ruby '1.9.3' # prevents hard-to-diagnose errors with bundle install
+
 gem 'eventmachine'
 gem "em-http-request"
 gem "ruby-hmac"
