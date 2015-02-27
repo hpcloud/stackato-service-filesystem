@@ -48,7 +48,7 @@ PATH
       warden-protocol
 
 GEM
-  remote: http://rubygems.org/
+  remote: https://rubygems.org/
   specs:
     activesupport (4.2.0)
       i18n (~> 0.7)
@@ -245,6 +245,7 @@ GEM
       docopt (= 0.5.0)
       futuroscope (~> 0.1.5)
       ipaddress (= 0.8.0)
+      loggregator_emitter (= 4.0.0)
       mustache (= 0.99.4)
       pg (= 0.14.1)
       redis (= 3.0.6)
