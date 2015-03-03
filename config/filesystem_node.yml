@@ -17,3 +17,5 @@ base_dir: /var/stackato/services/filesystem/storage
 supported_versions:
   - "1.0"
 default_version: "1.0"
+loggregator:
+  source_type: SRV
