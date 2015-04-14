@@ -19,7 +19,7 @@ PATH
       yajl-ruby
 
 PATH
-  remote: ../base
+  remote: gems/base
   specs:
     vcap_services_base (0.2.6)
       cf-uaa-lib
