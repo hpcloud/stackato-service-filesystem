@@ -105,7 +105,7 @@ gem 'tilt'              ,    '1.4.1'
 gem 'tzinfo'            ,   '0.3.38'
 gem 'uuidtools'         ,    '2.1.4'
 gem 'vcap_common'       ,    '3.0.0', :path => '../../common', :require => ['vcap/common', 'vcap/component', 'vcap/util']
-gem 'vcap_services_base',    '0.2.6', :path => "../base"
+gem 'vcap_services_base',    '0.2.6', :path => "gems/base"
 gem 'vegas'             ,   '0.1.11'
 gem 'virtus'            ,    '1.0.0'
 gem 'vmstat'            ,    '2.0.0'
