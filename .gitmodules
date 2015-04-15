@@ -1,0 +1,3 @@
+[submodule "gems/base"]
+	path = gems/base
+	url = git@github.com:ActiveState/stackato-services-base.git
