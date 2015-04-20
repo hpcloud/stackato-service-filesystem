@@ -1,6 +1,6 @@
 [program:filesystem_gateway]
 directory=/s/code/services/filesystem
-command=/opt/rubies/current/bin/bundle exec bin/filesystem_gateway
+command=/home/stackato/.rbenv/shims/bundle exec bin/filesystem_gateway
 priority=30
 redirect_stderr=true
 stdout_logfile=/s/logs/filesystem_gateway.log
