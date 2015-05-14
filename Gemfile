@@ -15,7 +15,7 @@ gem "thin"
 gem "net-ssh"
 
 gem 'vcap_common', :require => ['vcap/common', 'vcap/component', 'vcap/util'], :path => '../../common'
-gem "vcap_services_base", :path => "../base"
+gem "vcap_services_base", :path => "gems/base"
 
 group :test do
   gem "rake"
