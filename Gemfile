@@ -6,7 +6,7 @@
 
 source (ENV['RUBYGEMS_MIRROR'] or 'https://rubygems.org')
 
-ruby '2.1.5' # prevents hard-to-diagnose errors with bundle install
+ruby '2.1.6' # prevents hard-to-diagnose errors with bundle install
 
 gem 'activesupport'     ,    '4.0.1'
 gem 'addressable'       ,    '2.3.5'
