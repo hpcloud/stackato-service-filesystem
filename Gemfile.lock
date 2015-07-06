@@ -238,7 +238,7 @@ GEM
     stackato-kato (3.0.0)
       colored (= 1.2)
       docopt (= 0.5.0)
-      futuroscope (~> 0.1.5)
+      futuroscope (~> 0.1.11)
       ipaddress (= 0.8.0)
       loggregator_emitter (= 4.0.0)
       mustache (= 0.99.4)
