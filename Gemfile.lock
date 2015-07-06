@@ -150,7 +150,7 @@ GEM
     fluent-logger (0.4.7)
       msgpack (>= 0.4.4, < 0.6.0, != 0.5.3, != 0.5.2, != 0.5.1, != 0.5.0)
       yajl-ruby (~> 1.0)
-    futuroscope (0.1.5)
+    futuroscope (0.1.11)
     grape (0.6.1)
       activesupport
       builder
@@ -233,7 +233,7 @@ GEM
     stackato-kato (3.0.0)
       colored (= 1.2)
       docopt (= 0.5.0)
-      futuroscope (~> 0.1.5)
+      futuroscope (~> 0.1.11)
       ipaddress (= 0.8.0)
       mustache (= 0.99.4)
       pg (= 0.14.1)
@@ -320,7 +320,7 @@ DEPENDENCIES
   eventmachine_httpserver (= 0.2.1)
   fastercsv (= 1.5.5)
   fluent-logger (= 0.4.7)
-  futuroscope (= 0.1.5)
+  futuroscope (= 0.1.11)
   grape (= 0.6.1)
   hashie (= 2.0.5)
   http_parser.rb (= 0.6.0.beta.2)
